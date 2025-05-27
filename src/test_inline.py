@@ -1,18 +1,18 @@
 import unittest
 from textnode import TextNode, TextType
-import utils as u
+import inline as inline
 
 
-class TestUtils(unittest.TestCase):
+class TestInline(unittest.TestCase):
     def test_text(self):
         node = TextNode("This is a text node", TextType.TEXT)
-        html_node = u.text_node_to_html_node(node)
+        html_node = inline.text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
 
     def test_to_link(self):
         node = TextNode("boots", TextType.LINK, "https://www.boot.dev")
-        leaf = u.text_node_to_html_node(node)
+        leaf = inline.text_node_to_html_node(node)
 
         self.assertEqual(leaf.tag, "a")
         self.assertEqual(leaf.props["href"], "https://www.boot.dev")
@@ -23,7 +23,7 @@ class TestUtils(unittest.TestCase):
             TextType.IMAGE,
             "https://ih1.redbubble.net/image.4179810400.4645/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg",
         )
-        leaf = u.text_node_to_html_node(node)
+        leaf = inline.text_node_to_html_node(node)
 
         self.assertEqual(leaf.value, "")
         self.assertEqual(leaf.tag, "img")
@@ -44,13 +44,13 @@ class TestUtils(unittest.TestCase):
             ([TextNode("`a code block`", TextType.TEXT)], "`", TextType.CODE),
         ]
 
-        bolds = u.split_nodes_delimiter(*cases[0])
+        bolds = inline.split_nodes_delimiter(*cases[0])
         bolds_expect = [
             TextNode("some ", TextType.TEXT),
             TextNode("bold", TextType.BOLD),
             TextNode(" text", TextType.TEXT),
         ]
-        italics = u.split_nodes_delimiter(*cases[1])
+        italics = inline.split_nodes_delimiter(*cases[1])
         italics_expect = [
             TextNode("some ", TextType.TEXT),
             TextNode("italics", TextType.ITALIC),
@@ -58,7 +58,7 @@ class TestUtils(unittest.TestCase):
             TextNode("a bit", TextType.ITALIC),
             TextNode(" more", TextType.TEXT),
         ]
-        codes = u.split_nodes_delimiter(*cases[2])
+        codes = inline.split_nodes_delimiter(*cases[2])
         codes_expect = [TextNode("a code block", TextType.CODE)]
 
         self.assertEqual(bolds, bolds_expect)
@@ -67,7 +67,7 @@ class TestUtils(unittest.TestCase):
 
     def test_extract_image(self):
         text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif), ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg), and a regular [link](https://www.boot.dev)"
-        result = u.extract_markdown_images(text)
+        result = inline.extract_markdown_images(text)
 
         self.assertListEqual(
             result,
@@ -79,7 +79,7 @@ class TestUtils(unittest.TestCase):
 
     def test_extract_link(self):
         text = "This is text with a link [to boot dev](https://www.boot.dev), [to youtube](https://www.youtube.com/@bootdotdev) and an ![image](https://i.imgur.com/aKaOqIh.gif)"
-        result = u.extract_markdown_links(text)
+        result = inline.extract_markdown_links(text)
 
         self.assertListEqual(
             result,
@@ -94,7 +94,7 @@ class TestUtils(unittest.TestCase):
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
             TextType.TEXT,
         )
-        new_nodes = u.split_nodes_image([node])
+        new_nodes = inline.split_nodes_image([node])
         self.assertListEqual(
             [
                 TextNode("This is text with an ", TextType.TEXT),
@@ -112,7 +112,7 @@ class TestUtils(unittest.TestCase):
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png) and a sneaky [link!](https://www.boot.dev)",
             TextType.TEXT,
         )
-        new_nodes = u.split_nodes_image([node])
+        new_nodes = inline.split_nodes_image([node])
         self.assertListEqual(
             [
                 TextNode("This is text with an ", TextType.TEXT),
@@ -131,7 +131,7 @@ class TestUtils(unittest.TestCase):
             "This is text with a [link](https://i.imgur.com/zjjcJKZ.png) and another [second link](https://i.imgur.com/3elNhQu.png)",
             TextType.TEXT,
         )
-        new_nodes = u.split_nodes_link([node])
+        new_nodes = inline.split_nodes_link([node])
         self.assertListEqual(
             [
                 TextNode("This is text with a ", TextType.TEXT),
@@ -149,7 +149,7 @@ class TestUtils(unittest.TestCase):
             "This is text with a [link](https://i.imgur.com/zjjcJKZ.png) and another [second link](https://i.imgur.com/3elNhQu.png) and a sneaky ![image](https://i.imgur.com/3elNhQu.png)!",
             TextType.TEXT,
         )
-        new_nodes = u.split_nodes_link([node])
+        new_nodes = inline.split_nodes_link([node])
         self.assertListEqual(
             [
                 TextNode("This is text with a ", TextType.TEXT),
@@ -175,7 +175,7 @@ class TestUtils(unittest.TestCase):
             TextType.TEXT,
         )
 
-        new_nodes = u.split_nodes_image([node, node2])
+        new_nodes = inline.split_nodes_image([node, node2])
 
         self.assertListEqual(
             [
@@ -197,7 +197,7 @@ class TestUtils(unittest.TestCase):
             TextType.TEXT,
         )
 
-        new_nodes = u.split_nodes_link([node, node2])
+        new_nodes = inline.split_nodes_link([node, node2])
 
         self.assertListEqual(
             [
@@ -214,7 +214,7 @@ class TestUtils(unittest.TestCase):
 
     def test_text_to_nodes(self):
         text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-        result = u.text_to_textnodes(text)
+        result = inline.text_to_textnodes(text)
         expect = [
             TextNode("This is ", TextType.TEXT),
             TextNode("text", TextType.BOLD),
@@ -233,7 +233,7 @@ class TestUtils(unittest.TestCase):
 
     def test_text_to_multiple_nodes(self):
         text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev) and again, This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-        result = u.text_to_textnodes(text)
+        result = inline.text_to_textnodes(text)
         expect = [
             TextNode("This is ", TextType.TEXT),
             TextNode("text", TextType.BOLD),
@@ -269,7 +269,7 @@ class TestUtils(unittest.TestCase):
             "and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)\n"
             "and a [link](https://boot.dev)"
         )
-        result = u.text_to_textnodes(text)
+        result = inline.text_to_textnodes(text)
         expect = [
             TextNode("This is ", TextType.TEXT),
             TextNode("text", TextType.BOLD),
