@@ -2,6 +2,7 @@ import re
 from typing import Callable
 from textnode import TextNode, TextType
 from leafnode import LeafNode
+from functools import partial
 
 IMAGE_REGEX = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
 LINK_REGEX = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
@@ -30,6 +31,11 @@ def split_nodes_delimiter(
                 new_nodes.append(TextNode(current, type))
 
     return new_nodes
+
+
+split_bold = partial(split_nodes_delimiter, delimiter="**", type=TextType.BOLD)
+split_italic = partial(split_nodes_delimiter, delimiter="_", type=TextType.ITALIC)
+split_code = partial(split_nodes_delimiter, delimiter="`", type=TextType.CODE)
 
 
 def extract_markdown_images(text: str) -> list[tuple[str, str]]:
@@ -108,3 +114,18 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
         case _:
             raise Exception("Invalid TextNode type")
+
+
+def text_to_textnodes(text: str) -> list[TextNode]:
+    nodes: list[TextNode] = [TextNode(text, TextType.TEXT)]
+    ops: list[Callable] = [
+        split_bold,
+        split_code,
+        split_italic,
+        split_nodes_image,
+        split_nodes_link,
+    ]
+    for fn in ops:
+        nodes = fn(nodes)
+
+    return nodes
