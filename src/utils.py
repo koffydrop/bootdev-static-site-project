@@ -8,7 +8,7 @@ LINK_REGEX = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
 
 
 def split_nodes_delimiter(
-    old_nodes: list[TextNode], delimiter: str, text_type: TextType
+    old_nodes: list[TextNode], delimiter: str, type: TextType
 ) -> list[TextNode]:
     new_nodes: list[TextNode] = []
 
@@ -16,7 +16,7 @@ def split_nodes_delimiter(
         split_text = node.text.split(delimiter)
         if len(split_text) <= 1:
             new_nodes.append(node)
-            break
+            continue
         elif len(split_text) % 2 == 0:
             raise Exception(f"Unclosed delimiter in:\n{node.text}")
 
@@ -27,7 +27,7 @@ def split_nodes_delimiter(
             if i % 2 == 0:
                 new_nodes.append(TextNode(current, node.type))
             else:
-                new_nodes.append(TextNode(current, text_type))
+                new_nodes.append(TextNode(current, type))
 
     return new_nodes
 
