@@ -1,6 +1,7 @@
 import unittest
-from nodes.textnode import TextNode, TextType
+
 import md.inline as inline
+from nodes.textnode import TextNode, TextType
 
 
 class TestInline(unittest.TestCase):

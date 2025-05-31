@@ -1,4 +1,5 @@
 import unittest
+
 from nodes.leafnode import LeafNode
 from nodes.parentnode import ParentNode
 

@@ -1,8 +1,10 @@
 import re
-from typing import Callable
-from nodes.textnode import TextNode, TextType
-from nodes.leafnode import LeafNode
 from functools import partial
+from typing import Callable
+
+from nodes.leafnode import LeafNode
+from nodes.textnode import TextNode, TextType
+
 
 IMAGE_REGEX = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
 LINK_REGEX = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
