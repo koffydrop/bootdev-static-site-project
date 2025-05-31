@@ -1,8 +1,6 @@
 import unittest
-from htmlnode import HTMLNode
-from textnode import TextNode, TextType
-from leafnode import LeafNode
-from parentnode import ParentNode
+from nodes.leafnode import LeafNode
+from nodes.parentnode import ParentNode
 
 
 class TestParentNode(unittest.TestCase):

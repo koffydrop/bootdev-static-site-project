@@ -1,7 +1,7 @@
 import re
 from typing import Callable
-from textnode import TextNode, TextType
-from leafnode import LeafNode
+from nodes.textnode import TextNode, TextType
+from nodes.leafnode import LeafNode
 from functools import partial
 
 IMAGE_REGEX = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
