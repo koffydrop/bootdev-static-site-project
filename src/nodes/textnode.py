@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 
 class TextType(Enum):
@@ -14,7 +15,7 @@ class TextNode:
     def __init__(self, text: str, type: TextType, url=None):
         self.text: str = text
         self.type: TextType = type
-        self.url: str | None = url
+        self.url: Optional[str] = url
 
     def __eq__(self, other):
         return (

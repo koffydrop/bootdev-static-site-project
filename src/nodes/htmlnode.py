@@ -1,10 +1,13 @@
+from typing import Optional
+
+
 class HTMLNode:
     def __init__(
         self,
-        tag: str | None = None,
-        value: str | None = None,
-        children: list | None = None,
-        props: dict | None = None,
+        tag: Optional[str] = None,
+        value: Optional[str] = None,
+        children: Optional[list] = None,
+        props: Optional[dict] = None,
     ):
         self.tag = tag
         self.value = value
