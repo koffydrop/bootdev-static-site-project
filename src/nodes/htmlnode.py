@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 
 class HTMLNode:
@@ -6,7 +6,7 @@ class HTMLNode:
         self,
         tag: Optional[str] = None,
         value: Optional[str] = None,
-        children: Optional[list] = None,
+        children: Optional[Sequence] = None,
         props: Optional[dict] = None,
     ):
         self.tag = tag
