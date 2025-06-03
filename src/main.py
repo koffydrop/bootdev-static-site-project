@@ -6,7 +6,7 @@ from md.convert import markdown_to_html_node, extract_title
 
 def main() -> None:
     static_to_public()
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 
 def generate_page(from_path: str, template_path: str, dst_path: str) -> None:
@@ -19,6 +19,16 @@ def generate_page(from_path: str, template_path: str, dst_path: str) -> None:
     os.makedirs(os.path.dirname(dst_path), exist_ok=True)
     with open(dst_path, "x") as f:
         f.write(doc)
+
+
+def generate_pages_recursive(src_dir: str, template_path: str, dst_dir: str) -> None:
+    for item in os.listdir(src_dir):
+        src = os.path.join(src_dir, item)
+        dst = os.path.join(dst_dir, item)
+        if os.path.isdir(src):
+            generate_pages_recursive(src, template_path, dst)
+        elif item.endswith(".md"):
+            generate_page(src, template_path, dst.replace(".md", ".html"))
 
 
 def static_to_public() -> None:
