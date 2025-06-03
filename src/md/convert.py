@@ -1,9 +1,10 @@
-from nodes.htmlnode import HTMLNode
-from nodes.parentnode import ParentNode
-from nodes.leafnode import LeafNode
-from md.block import markdown_to_blocks, block_to_block_type, BlockType
-import md.inline as inline
 import re
+
+import md.inline as inline
+from md.block import markdown_to_blocks, block_to_block_type, BlockType
+from nodes.htmlnode import HTMLNode
+from nodes.leafnode import LeafNode
+from nodes.parentnode import ParentNode
 
 
 def text_to_children(text: str) -> list[LeafNode]:
@@ -69,3 +70,10 @@ def markdown_to_html_node(md: str) -> ParentNode:
                     )
                 )
     return ParentNode("div", final_nodes)
+
+
+def extract_title(md: str) -> str:
+    for line in md.split("\n"):
+        if line.startswith("# "):
+            return line.lstrip("#").strip()
+    raise Exception(f"no header in {md}")

@@ -1,6 +1,6 @@
 import unittest
 
-from md.convert import markdown_to_html_node
+from md.convert import markdown_to_html_node, extract_title
 
 
 class TestConvert(unittest.TestCase):
@@ -64,3 +64,12 @@ print("hello")
             html,
             '<div><h1>h1</h1><h6>h6</h6><p>paragraph with <b>bold</b> and <i>italics</i> and <a href="https://www.boot.dev">link</a> and <img src="https://www.boot.dev" alt="image"></img></p><blockquote>a blockquote by someone probably</blockquote><ul><li>unordered</li><li>list</li></ul><ol><li>ordered</li><li>list</li><li>item</li></ol><pre><code>print("hello")\n</code></pre></div>',
         )
+
+    def test_extract_title(self):
+        md = """# The Title
+
+a paragraph
+
+## Another Title"""
+        text = extract_title(md)
+        self.assertEqual(text, "The Title")
